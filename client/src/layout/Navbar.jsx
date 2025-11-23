@@ -24,9 +24,9 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
-            <span className="text-white text-xs sm:text-sm lg:text-base">
+            {/* <span className="text-white text-xs sm:text-sm lg:text-base">
               Welcome, {user.username || 'User'}
-            </span>
+            </span> */}
             <button
               onClick={handleLogout}
               className="bg-indigo-700 hover:bg-indigo-800 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -57,9 +57,9 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden absolute left-0 right-0 top-full bg-indigo-600 border-t border-indigo-500 shadow-lg">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <div className="text-white text-sm px-3 py-2 border-b border-indigo-500">
+              {/* <div className="text-white text-sm px-3 py-2 border-b border-indigo-500">
                 Welcome, {user.username || 'User'}
-              </div>
+              </div> */}
               <button
                 onClick={handleLogout}
                 className="w-full text-left text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
