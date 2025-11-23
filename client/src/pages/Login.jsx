@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Modal from '../component/Modal'
 
 const Login = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -43,14 +44,8 @@ const Login = () => {
         // Store token in localStorage
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
-        setModal({
-          isOpen: true,
-          title: 'Login Successful!',
-          message: 'Welcome back to Budget Buddy!',
-          type: 'success'
-        })
-        // You can redirect to dashboard here
-        // window.location.href = '/dashboard'
+        // Redirect to dashboard
+        navigate('/dashboard')
       } else {
         setModal({
           isOpen: true,

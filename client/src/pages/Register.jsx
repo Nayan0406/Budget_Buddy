@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Modal from '../component/Modal'
 
 const Register = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -45,14 +46,8 @@ const Register = () => {
         // Store token in localStorage
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
-        setModal({
-          isOpen: true,
-          title: 'Registration Successful!',
-          message: 'Welcome to Budget Buddy! Your account has been created successfully.',
-          type: 'success'
-        })
-        // You can redirect to dashboard here
-        // window.location.href = '/dashboard'
+        // Redirect to dashboard
+        navigate('/dashboard')
       } else {
         setModal({
           isOpen: true,
