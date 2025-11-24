@@ -11,6 +11,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI , {
@@ -39,6 +40,7 @@ mongoose.connection.on('reconnected', () => {
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/income', require('./routes/income'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
