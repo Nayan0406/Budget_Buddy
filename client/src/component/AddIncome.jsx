@@ -33,7 +33,8 @@ const AddIncome = () => {
         formData.append(`attachments`, file)
       })
 
-      const res = await fetch('/api/income', {
+      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const res = await fetch(`${API_BASE}/income`, {
         method: 'POST',
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),

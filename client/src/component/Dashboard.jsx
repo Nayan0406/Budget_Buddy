@@ -89,7 +89,8 @@ const Dashboard = () => {
   const fetchIncomes = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/income', {
+      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const response = await fetch(`${API_BASE}/income`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
