@@ -65,7 +65,7 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div
         className={
-          `fixed left-0 top-0 z-50 w-64 bg-indigo-600 shadow-xl transform transition-transform duration-300 ease-in-out h-screen
+          `fixed left-0 top-0 z-50 w-64 bg-indigo-600 shadow-xl transform transition-transform duration-300 ease-in-out h-screen overflow-y-auto
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
         }
         aria-hidden={!isOpen && window.innerWidth < 1024}
