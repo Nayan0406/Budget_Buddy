@@ -41,6 +41,7 @@ mongoose.connection.on('reconnected', () => {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/income', require('./routes/income'));
+app.use('/api/expenses', require('./routes/expenses'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

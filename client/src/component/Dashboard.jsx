@@ -32,7 +32,9 @@ const Dashboard = () => {
   const [totalIncome, setTotalIncome] = useState(0)
   const [yearIncome, setYearIncome] = useState(0)
   const [monthIncome, setMonthIncome] = useState(0)
+  const [budgetLeft, setBudgetLeft] = useState(0)
   const [incomes, setIncomes] = useState([])
+  const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(true)
 
   // Placeholder: compute udhar amount based on selected filters
@@ -85,64 +87,96 @@ const Dashboard = () => {
     }
   }
 
-  // Fetch incomes and calculate totals
-  const fetchIncomes = async () => {
+  // Fetch incomes and expenses and calculate totals
+  const fetchData = async () => {
     try {
       const token = localStorage.getItem('token')
       const API_BASE = import.meta.env.VITE_API_BASE || '/api'
-      const response = await fetch(`${API_BASE}/income`, {
+
+      // Fetch incomes
+      const incomeResponse = await fetch(`${API_BASE}/income`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        setIncomes(data)
+      // Fetch expenses
+      const expenseResponse = await fetch(`${API_BASE}/expenses`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      let incomeData = []
+      let expenseData = []
+
+      if (incomeResponse.ok) {
+        incomeData = await incomeResponse.json()
+        setIncomes(incomeData)
 
         // Calculate total income (all time)
-        const total = data.reduce((sum, income) => sum + income.amount, 0)
+        const total = incomeData.reduce((sum, income) => sum + income.amount, 0)
         setTotalIncome(total)
-
-        // Calculate for current selections
-        calculateIncomes(data, selectedYear, selectedMonth)
       }
+
+      if (expenseResponse.ok) {
+        expenseData = await expenseResponse.json()
+        setExpenses(expenseData)
+      }
+
+      // Calculate for current selections
+      calculateAmounts(incomeData, expenseData, selectedYear, selectedMonth)
     } catch (error) {
-      console.error('Error fetching incomes:', error)
+      console.error('Error fetching data:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  // Calculate incomes for selected year and month
-  const calculateIncomes = (incomesData, year, month) => {
+  // Calculate amounts for selected year and month
+  const calculateAmounts = (incomesData, expensesData, year, month) => {
     // Year income: total for selected year
     const yearTotal = incomesData
       .filter(income => new Date(income.date).getFullYear() === year)
       .reduce((sum, income) => sum + income.amount, 0)
     setYearIncome(yearTotal)
 
-    // Month income: for selected month or current month if "All"
-    let monthTotal = 0
+    // Month income and budget left: income - expense for selected month or current month if "All"
+    let monthIncomeTotal = 0
+    let monthExpenseTotal = 0
     if (month === 'All') {
       const now = new Date()
-      monthTotal = incomesData
+      monthIncomeTotal = incomesData
         .filter(income => {
           const incomeDate = new Date(income.date)
           return incomeDate.getMonth() === now.getMonth() &&
                  incomeDate.getFullYear() === now.getFullYear()
         })
         .reduce((sum, income) => sum + income.amount, 0)
+      monthExpenseTotal = expensesData
+        .filter(expense => {
+          const expenseDate = new Date(expense.date)
+          return expenseDate.getMonth() === now.getMonth() &&
+                 expenseDate.getFullYear() === now.getFullYear()
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0)
     } else {
       const monthIndex = months.indexOf(month) - 1
-      monthTotal = incomesData
+      monthIncomeTotal = incomesData
         .filter(income => {
           const incomeDate = new Date(income.date)
           return incomeDate.getFullYear() === year && incomeDate.getMonth() === monthIndex
         })
         .reduce((sum, income) => sum + income.amount, 0)
+      monthExpenseTotal = expensesData
+        .filter(expense => {
+          const expenseDate = new Date(expense.date)
+          return expenseDate.getFullYear() === year && expenseDate.getMonth() === monthIndex
+        })
+        .reduce((sum, expense) => sum + expense.amount, 0)
     }
-    setMonthIncome(monthTotal)
+    setMonthIncome(monthIncomeTotal)
+    setBudgetLeft(monthIncomeTotal - monthExpenseTotal)
   }
 
   // Responsive SVG bar chart component (measures container width)
@@ -215,16 +249,16 @@ const Dashboard = () => {
       return
     }
 
-    // Fetch incomes
-    fetchIncomes()
+    // Fetch data
+    fetchData()
   }, [navigate])
 
-  // Recalculate incomes when filters change
+  // Recalculate amounts when filters change
   useEffect(() => {
-    if (incomes.length > 0) {
-      calculateIncomes(incomes, selectedYear, selectedMonth)
+    if (incomes.length >= 0 && expenses.length >= 0) {
+      calculateAmounts(incomes, expenses, selectedYear, selectedMonth)
     }
-  }, [selectedYear, selectedMonth, incomes])
+  }, [selectedYear, selectedMonth, incomes, expenses])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -292,16 +326,18 @@ const Dashboard = () => {
                       </p>
                     </div>
                     <div className="bg-green-50 p-4 sm:p-6 rounded-lg border border-green-100">
-                        <h3 className="text-sm sm:text-base lg:text-lg font-medium text-green-900 mb-2">
-                          This Month
-                        </h3>
+                      <h3 className="text-sm sm:text-base lg:text-lg font-medium text-green-900 mb-2">
+                        This Month
+                      </h3>
                         <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">
                           {loading ? '...' : `₹${formatINR(monthIncome)}`}
                         </p>
                       </div>
                     <div className="bg-blue-50 p-4 sm:p-6 rounded-lg border border-blue-100">
                       <h3 className="text-sm sm:text-base lg:text-lg font-medium text-blue-900 mb-2">Budget Left</h3>
-                      <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">₹0.00</p>
+                      <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">
+                        {loading ? '...' : `₹${formatINR(budgetLeft)}`}
+                      </p>
                     </div>
                   </div>
 
