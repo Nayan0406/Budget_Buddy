@@ -35,7 +35,7 @@ const incomeSchema = new mongoose.Schema({
     originalname: String,
     mimetype: String,
     size: Number,
-    path: String
+    url: String
   }]
 }, {
   timestamps: true

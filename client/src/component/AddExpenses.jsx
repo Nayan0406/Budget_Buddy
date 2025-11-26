@@ -10,7 +10,7 @@ const AddExpenses = () => {
   const [date, setDate] = useState('')
   const [paymentMode, setPaymentMode] = useState('Cash')
   const [paymentModeOther, setPaymentModeOther] = useState('')
-  const [note, setNote] = useState('')
+  const [item, setItem] = useState('')
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -28,7 +28,7 @@ const AddExpenses = () => {
       formData.append('category', resolvedCategory)
       formData.append('paymentMode', resolvedPaymentMode)
       formData.append('date', date)
-      formData.append('note', note)
+      formData.append('item', item)
       files.forEach((file, index) => {
         formData.append(`attachments`, file)
       })
@@ -53,12 +53,15 @@ const AddExpenses = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="lg:ml-64 py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-4 sm:p-6 lg:p-8">
+      <div className="lg:ml-64">
+        <div className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+          <div className="py-4 sm:py-6">
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6 lg:p-8">
           <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-            <div className="bg-red-100 text-red-600 rounded-full p-2 sm:p-3">
+            <div className="bg-indigo-100 text-indigo-600 rounded-full p-2 sm:p-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m0 0l-8-4m8 4v10M4 7v10l8 4V11m8-4v10M4 17l8-4" />
               </svg>
@@ -84,8 +87,9 @@ const AddExpenses = () => {
                   step="0.01"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
+                  onWheel={(e) => e.target.blur()}
                   required
-                  className="pl-10 pr-4 py-2 sm:py-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                  className="pl-10 pr-4 py-2 sm:py-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   placeholder="0.00"
                 />
               </div>
@@ -101,9 +105,12 @@ const AddExpenses = () => {
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value)
+                    setItem('') // Clear item when category changes
+                  }}
                   required
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors"
+                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
                 >
                   <option value="Food">Food</option>
                   <option value="Travel">Travel</option>
@@ -116,7 +123,16 @@ const AddExpenses = () => {
                     placeholder="Please specify category"
                     value={categoryOther}
                     onChange={(e) => setCategoryOther(e.target.value)}
-                    className="mt-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors"
+                    className="mt-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
+                  />
+                )}
+                {(category === 'Food' || category === 'Shopping' || category === 'Entertainment' || category === 'Travel') && (
+                  <input
+                    placeholder={`What did you ${category === 'Food' ? 'eat' : category === 'Shopping' ? 'buy' : category === 'Entertainment' ? 'do' : 'spend on'}?`}
+                    value={item}
+                    onChange={(e) => setItem(e.target.value)}
+                    required
+                    className="mt-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
                   />
                 )}
               </div>
@@ -131,7 +147,7 @@ const AddExpenses = () => {
                 <select
                   value={paymentMode}
                   onChange={(e) => setPaymentMode(e.target.value)}
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors"
+                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
                 >
                   <option value="Cash">Cash</option>
                   <option value="Bank Transfer">Bank Transfer</option>
@@ -145,7 +161,7 @@ const AddExpenses = () => {
                     placeholder="Please specify payment mode"
                     value={paymentModeOther}
                     onChange={(e) => setPaymentModeOther(e.target.value)}
-                    className="mt-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors"
+                    className="mt-3 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
                   />
                 )}
               </div>
@@ -162,23 +178,7 @@ const AddExpenses = () => {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors"
-              />
-            </div>
-
-            <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Note (Optional)
-              </label>
-              <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={4}
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 py-2 sm:py-3 px-4 transition-colors resize-none"
-                placeholder="Optional note..."
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 py-2 sm:py-3 px-4 transition-colors"
               />
             </div>
 
@@ -194,7 +194,7 @@ const AddExpenses = () => {
                 multiple
                 accept=".pdf,.jpg,.jpeg,.png,.gif"
                 onChange={(e) => setFiles(Array.from(e.target.files))}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
               />
               {files.length > 0 && (
                 <div className="mt-2 text-sm text-gray-600">
@@ -214,7 +214,7 @@ const AddExpenses = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
               >
                 {loading ? 'Saving...' : 'Save Expense'}
               </button>
@@ -222,6 +222,9 @@ const AddExpenses = () => {
           </form>
         </div>
       </div>
+    </div>
+    </div>
+    </div>
     </div>
   )
 }

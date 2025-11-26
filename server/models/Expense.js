@@ -25,7 +25,7 @@ const expenseSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  note: {
+  item: {
     type: String,
     trim: true,
     default: ''
@@ -35,7 +35,7 @@ const expenseSchema = new mongoose.Schema({
     originalname: String,
     mimetype: String,
     size: Number,
-    path: String
+    url: String
   }]
 }, {
   timestamps: true

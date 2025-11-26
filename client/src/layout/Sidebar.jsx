@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 const Sidebar = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
   const user = JSON.parse(localStorage.getItem('user') || '{}')
 
@@ -41,7 +42,7 @@ const Sidebar = () => {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-indigo-600 text-white p-2 rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="bg-gray-800 text-white p-2 rounded-md shadow-lg hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           aria-label="Toggle sidebar"
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,24 +66,26 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div
         className={
-          `fixed left-0 top-0 z-50 w-64 bg-indigo-600 shadow-xl transform transition-transform duration-300 ease-in-out h-screen overflow-y-auto
+          `fixed left-0 top-0 z-50 w-4/5 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out h-screen overflow-y-auto
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
         }
+        role={isOpen ? 'dialog' : 'navigation'}
+        aria-modal={isOpen}
         aria-hidden={!isOpen && window.innerWidth < 1024}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between h-16 px-4 bg-indigo-700">
+          <div className="flex items-center justify-between h-16 px-4 bg-gray-900">
             <Link to="/dashboard" className="text-white text-xl font-bold hover:text-indigo-100 transition duration-200">
               Budget Buddy
             </Link>
             {/* Close button for mobile */}
             <button
               onClick={() => setIsOpen(false)}
-              className="lg:hidden text-indigo-100 p-2 rounded-md hover:bg-indigo-600 focus:outline-none"
+              className="lg:hidden text-gray-100 p-2 rounded-md hover:bg-gray-700 focus:outline-none"
               aria-label="Close sidebar"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -99,7 +102,7 @@ const Sidebar = () => {
               <Link
                 to="/dashboard"
                 ref={firstLinkRef}
-                className="flex items-center px-3 py-2 text-white hover:bg-indigo-700 rounded-md transition duration-200"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/dashboard' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
                 <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,7 +113,7 @@ const Sidebar = () => {
               </Link>
               <Link
                 to="/add-income"
-                className="flex items-center px-3 py-2 text-white hover:bg-indigo-700 rounded-md transition duration-200"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/add-income' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
                 <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -120,7 +123,7 @@ const Sidebar = () => {
               </Link>
               <Link
                 to="/add-expenses"
-                className="flex items-center px-3 py-2 text-white hover:bg-indigo-700 rounded-md transition duration-200"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/add-expenses' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
                 <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,7 +133,7 @@ const Sidebar = () => {
               </Link>
               <Link
                 to="/records"
-                className="flex items-center px-3 py-2 text-white hover:bg-indigo-700 rounded-md transition duration-200"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/records' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
                 <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +143,7 @@ const Sidebar = () => {
               </Link>
               <Link
                 to="/profile"
-                className="flex items-center px-3 py-2 text-white hover:bg-indigo-700 rounded-md transition duration-200"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/profile' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
                 <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -152,17 +155,17 @@ const Sidebar = () => {
           </nav>
 
           {/* Footer with logout */}
-          <div className="p-4 border-t border-indigo-500">
+          <div className="p-4 border-t border-gray-600">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center px-3 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-md text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full flex items-center justify-center px-3 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-md text-sm font-medium transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
               Logout
             </button>
-            <div className="text-center text-indigo-200 text-xs mt-3">
+            <div className="text-center text-gray-400 text-xs mt-3">
               Made with ❤️ by Nayan Nikhare
             </div>
           </div>

@@ -38,7 +38,7 @@ const Profile = () => {
           profileImage: null
         })
         if (userData.profileImage) {
-          setImagePreview(`${API_BASE}/uploads/${userData.profileImage}`)
+          setImagePreview(userData.profileImage) // Cloudinary URL
         }
       }
     } catch (error) {
@@ -79,6 +79,8 @@ const Profile = () => {
       formDataToSend.append('phone', formData.phone)
       if (formData.profileImage) {
         formDataToSend.append('profileImage', formData.profileImage)
+      } else if (formData.profileImage === null) {
+        formDataToSend.append('profileImage', 'null') // Indicate deletion
       }
 
       const response = await fetch(`${API_BASE}/auth/profile`, {
@@ -106,6 +108,45 @@ const Profile = () => {
     }
   }
 
+  const handleDeleteImage = async () => {
+    if (!confirm('Are you sure you want to delete your profile image?')) return
+
+    setLoading(true)
+    try {
+      const token = localStorage.getItem('token')
+      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+
+      const formDataToSend = new FormData()
+      formDataToSend.append('username', formData.username)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('phone', formData.phone)
+      formDataToSend.append('profileImage', 'null') // Indicate deletion
+
+      const response = await fetch(`${API_BASE}/auth/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      })
+
+      if (response.ok) {
+        const updatedUser = await response.json()
+        setUser(updatedUser)
+        localStorage.setItem('user', JSON.stringify(updatedUser))
+        setImagePreview(null)
+        alert('Profile image deleted successfully!')
+      } else {
+        alert('Failed to delete profile image. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error deleting profile image:', error)
+      alert('Error deleting profile image. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleCancel = () => {
     setFormData({
       username: user.username || '',
@@ -113,15 +154,18 @@ const Profile = () => {
       phone: user.phone || '',
       profileImage: null
     })
-    setImagePreview(user.profileImage ? `${import.meta.env.VITE_API_BASE || '/api'}/uploads/${user.profileImage}` : null)
+    setImagePreview(user.profileImage || null)
     setIsEditing(false)
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="lg:ml-64 py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl sm:max-w-4xl lg:max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-4 sm:p-6 lg:p-8">
+      <div className="lg:ml-64">
+        <div className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+          <div className="py-4 sm:py-6">
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6 lg:p-8">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6">
             <div className="bg-blue-100 text-blue-600 rounded-full p-2 sm:p-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,20 +208,35 @@ const Profile = () => {
                 )}
               </div>
               {isEditing && (
-                <div className="text-center">
-                  <label className="inline-flex items-center px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors text-sm sm:text-base">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {imagePreview ? 'Change Photo' : 'Add Photo'}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
-                  </label>
-                  <p className="text-xs text-gray-500 mt-2">JPG, PNG, GIF up to 5MB</p>
+                <div className="text-center space-y-2">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                    <label className="inline-flex items-center px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors text-sm sm:text-base">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {imagePreview ? 'Change Photo' : 'Add Photo'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {imagePreview && (
+                      <button
+                        type="button"
+                        onClick={handleDeleteImage}
+                        disabled={loading}
+                        className="inline-flex items-center px-3 sm:px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm sm:text-base disabled:opacity-50"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Remove Photo
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500">JPG, PNG, GIF up to 5MB</p>
                 </div>
               )}
             </div>
@@ -279,6 +338,9 @@ const Profile = () => {
           </div>
         </div>
       </div>
+    </div>
+    </div>
+    </div>
     </div>
   )
 }

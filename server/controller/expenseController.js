@@ -21,7 +21,7 @@ const verifyToken = (req, res, next) => {
 // Add expense
 const addExpense = async (req, res) => {
   try {
-    const { amount, category, paymentMode, date, note } = req.body;
+    const { amount, category, paymentMode, date, item } = req.body;
     const userId = req.user.userId;
 
     // Handle file attachments if any
@@ -29,11 +29,11 @@ const addExpense = async (req, res) => {
     if (req.files && req.files.length > 0) {
       req.files.forEach(file => {
         attachments.push({
-          filename: file.filename,
+          filename: file.originalname,
           originalname: file.originalname,
           mimetype: file.mimetype,
           size: file.size,
-          path: file.path
+          url: file.path // Cloudinary URL
         });
       });
     }
@@ -44,11 +44,9 @@ const addExpense = async (req, res) => {
       category,
       paymentMode,
       date: new Date(date),
-      note,
+      item,
       attachments
-    });
-
-    await expense.save();
+    });    await expense.save();
 
     res.status(201).json({
       message: 'Expense added successfully',

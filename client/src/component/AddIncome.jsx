@@ -53,10 +53,13 @@ const AddIncome = () => {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="lg:ml-64 py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-6 sm:p-8">
+      <div className="lg:ml-64">
+        <div className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+          <div className="py-4 sm:py-6">
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6 lg:p-8">
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-indigo-100 text-indigo-600 rounded-full p-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -221,6 +224,9 @@ const AddIncome = () => {
           </form>
         </div>
       </div>
+    </div>
+    </div>
+    </div>
     </div>
   )
 }

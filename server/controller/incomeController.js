@@ -29,11 +29,11 @@ const addIncome = async (req, res) => {
     if (req.files && req.files.length > 0) {
       req.files.forEach(file => {
         attachments.push({
-          filename: file.filename,
+          filename: file.originalname,
           originalname: file.originalname,
           mimetype: file.mimetype,
           size: file.size,
-          path: file.path
+          url: file.path // Cloudinary URL
         });
       });
     }
