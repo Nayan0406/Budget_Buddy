@@ -56,7 +56,7 @@ const AddIncome = () => {
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <Sidebar />
       <div className="lg:ml-64 py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-6 sm:p-8">
+        <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-6 sm:p-8">
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-indigo-100 text-indigo-600 rounded-full p-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,6 +182,12 @@ const AddIncome = () => {
             </div>
 
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+                Attachments (PDF, Images)
+              </label>
               <input
                 type="file"
                 multiple

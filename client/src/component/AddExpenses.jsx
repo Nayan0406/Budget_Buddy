@@ -56,7 +56,7 @@ const AddExpenses = () => {
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <Sidebar />
       <div className="lg:ml-64 py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-4 sm:p-6 lg:p-8">
+        <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-4 sm:p-6 lg:p-8">
           <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="bg-red-100 text-red-600 rounded-full p-2 sm:p-3">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
