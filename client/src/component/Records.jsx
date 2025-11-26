@@ -325,8 +325,8 @@ const Records = () => {
             </div>
           ) : (
             <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
+              <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                <table className="min-w-max w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -335,16 +335,16 @@ const Records = () => {
                       <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Category
                       </th>
-                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Item
                       </th>
                       <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Amount
                       </th>
-                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Payment Mode
                       </th>
-                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                      <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Attachments
                       </th>
                     </tr>
@@ -360,16 +360,16 @@ const Records = () => {
                             {expense.category}
                           </span>
                         </td>
-                        <td className="px-3 sm:px-6 py-2 sm:py-4 text-sm text-gray-900 max-w-xs truncate hidden sm:table-cell">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 text-sm text-gray-900 max-w-xs truncate">
                           {expense.item || 'N/A'}
                         </td>
                         <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {formatAmount(expense.amount)}
                         </td>
-                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden md:table-cell">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                           {expense.paymentMode}
                         </td>
-                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900 hidden lg:table-cell">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                           {expense.attachments && expense.attachments.length > 0 ? (
                             <div className="flex gap-1">
                               {expense.attachments.map((attachment, index) => (
@@ -400,7 +400,7 @@ const Records = () => {
           {filteredExpenses.length > 0 && (
             <div className="mt-6 bg-white overflow-hidden shadow rounded-lg p-4 sm:p-6">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">Summary</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-2">
                 <div className="text-center">
                   <p className="text-xl sm:text-2xl font-bold text-indigo-600">
                     {formatAmount(filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0))}
