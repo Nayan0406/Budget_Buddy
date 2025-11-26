@@ -32,7 +32,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('https://budget-buddy-backend-five.vercel.app/api/auth/login', {
+      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
