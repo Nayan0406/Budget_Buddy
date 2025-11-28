@@ -66,7 +66,7 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div
         className={
-          `fixed left-0 top-0 z-50 w-4/5 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out h-screen overflow-y-auto
+          `fixed left-0 top-0 bottom-0 z-50 w-4/5 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
         }
         role={isOpen ? 'dialog' : 'navigation'}
