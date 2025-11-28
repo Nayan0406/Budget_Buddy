@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import AutoLogout from '../component/AutoLogout'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 const Sidebar = () => {
@@ -66,7 +67,7 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div
         className={
-          `fixed left-0 top-0 bottom-0 z-50 w-4/5 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto
+          `fixed left-0 top-0 bottom-0 z-50 w-3/4 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
         }
         role={isOpen ? 'dialog' : 'navigation'}
@@ -74,6 +75,8 @@ const Sidebar = () => {
         aria-hidden={!isOpen && window.innerWidth < 1024}
       >
         <div className="flex flex-col h-full">
+          {/* Auto logout for inactivity when user is logged in */}
+          <AutoLogout />
           {/* Header */}
           <div className="flex items-center justify-between h-16 px-4 bg-gray-900">
             <Link to="/dashboard" className="text-white text-xl font-bold hover:text-indigo-100 transition duration-200">
@@ -165,8 +168,8 @@ const Sidebar = () => {
               </svg>
               Logout
             </button>
-            <div className="text-center text-gray-400 text-xs mt-3">
-              Made with ❤️ by Nayan Nikhare
+            <div className="text-center text-gray-400 text-xs mt-6">
+              <div>© {new Date().getFullYear()} With ❤️ by Nayan Nikhare. All rights reserved.</div>
             </div>
           </div>
         </div>

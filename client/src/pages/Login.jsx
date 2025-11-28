@@ -77,7 +77,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
       <div className="text-center mb-6 sm:mb-8">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-indigo-600 mb-2">
           Budget Buddy
