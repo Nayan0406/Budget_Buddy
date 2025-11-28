@@ -135,6 +135,16 @@ const Sidebar = () => {
                 Add Expenses
               </Link>
               <Link
+                to="/borrowing"
+                className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/borrowing' ? 'bg-gray-700' : ''}`}
+                onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
+              >
+                <svg className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m0 0l-8-4m8 4v10M4 7v10l8 4V11m8-4v10M4 17l8-4" />
+                </svg>
+                Add Borrowing
+              </Link>
+              <Link
                 to="/records"
                 className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/records' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}

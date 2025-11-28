@@ -2,8 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // AutoLogout: logs out user after a period of inactivity
-// Default timeout set to 10 minutes for now (10 * 60 * 1000 ms)
-const AutoLogout = ({ timeout = 10 * 60 * 1000 }) => {
+const AutoLogout = ({ timeout = 30 * 60 * 1000 }) => {
   const navigate = useNavigate()
   const timerRef = useRef(null)
   const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll']

@@ -5,6 +5,7 @@ import Register from './pages/Register.jsx'
 import Dashboard from './component/Dashboard.jsx'
 import AddIncome from './component/AddIncome.jsx'
 import AddExpenses from './component/AddExpenses.jsx'
+import Borrowing from './component/Borrowing.jsx'
 import Records from './component/Records.jsx'
 import Profile from './component/Profile.jsx'
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-income" element={<AddIncome />} />
           <Route path="/add-expenses" element={<AddExpenses />} />
+          <Route path="/borrowing" element={<Borrowing />} />
           <Route path="/records" element={<Records />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
