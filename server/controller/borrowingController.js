@@ -72,6 +72,26 @@ const updateBorrowing = async (req, res) => {
     const userId = req.user.userId;
     const updates = req.body;
 
+    // Handle partial payment
+    if (updates.payment && typeof updates.payment === 'number') {
+      const borrowing = await Borrowing.findOne({ _id: id, user: userId });
+      if (!borrowing) {
+        return res.status(404).json({ message: 'Borrowing record not found' });
+      }
+
+      const paymentAmount = parseFloat(updates.payment);
+      if (paymentAmount <= 0) {
+        return res.status(400).json({ message: 'Payment amount must be positive' });
+      }
+
+      const newRemaining = Math.max(0, borrowing.remaining - paymentAmount);
+      const newStatus = newRemaining <= 0 ? 'paid' : 'partial';
+
+      updates.remaining = newRemaining;
+      updates.status = newStatus;
+      delete updates.payment; // Remove payment from updates since we've processed it
+    }
+
     const borrowing = await Borrowing.findOneAndUpdate(
       { _id: id, user: userId },
       updates,

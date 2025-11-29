@@ -9,7 +9,7 @@ router.use(verifyToken);
 // Routes
 router.post('/', addBorrowing);
 router.get('/', getBorrowings);
-router.put('/:id', updateBorrowing);
+router.patch('/:id', updateBorrowing);
 router.delete('/:id', deleteBorrowing);
 
 module.exports = router;
