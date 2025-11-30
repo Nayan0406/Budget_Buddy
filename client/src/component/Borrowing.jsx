@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Sidebar from '../layout/Sidebar.jsx'
 
 const Borrowing = () => {
@@ -14,6 +14,8 @@ const Borrowing = () => {
   const [quickOpen, setQuickOpen] = useState(false)
   const [quick, setQuick] = useState({ name: '', contact: '', amount: '', dueDate: '', notes: '' })
   const [filter, setFilter] = useState('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const tableContainerRef = useRef(null)
   const [form, setForm] = useState({
     type: 'borrowed', // 'borrowed' = user owes, 'lent' = others owe user
     name: '',
@@ -115,6 +117,28 @@ const Borrowing = () => {
         return true
     }
   })
+
+  // Pagination
+  const PAGE_SIZE = 6
+  useEffect(() => {
+    // reset to first page when filter or items change
+    setCurrentPage(1)
+  }, [filter, items])
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE))
+  const paginatedItems = filteredItems.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  // smooth scroll table into view on page change
+  useEffect(() => {
+    if (tableContainerRef.current) {
+      try {
+        tableContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } catch (e) {
+        // fallback
+        tableContainerRef.current.scrollTop = 0
+      }
+    }
+  }, [currentPage])
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -354,24 +378,27 @@ const Borrowing = () => {
             </div>
           )}
           {/* Filter + Add */}
-          <div className="mb-4 sm:mb-6 flex flex-row gap-3 sm:gap-2 items-center justify-between">
-            <div className="flex flex-wrap gap-2">
-              <button key="all" onClick={() => setFilter('all')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'} flex-1 sm:flex-none min-w-0`}>All</button>
-              <button key="owed-by-me" onClick={() => setFilter('owed-by-me')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'owed-by-me' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'} flex-1 sm:flex-none min-w-0`}>Owed By Me</button>
-              <button key="owed-to-me" onClick={() => setFilter('owed-to-me')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'owed-to-me' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'} flex-1 sm:flex-none min-w-0`}>Owed To Me</button>
-              <button key="overdue" onClick={() => setFilter('overdue')} className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'overdue' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'} flex-1 sm:flex-none min-w-0`}>Overdue</button>
-            </div>
-            <div className="shrink-0">
-              <button
-                onClick={() => setShowForm(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                <span className="hidden xs:inline">Add Borrowing</span>
-                <span className="xs:hidden">Add</span>
-              </button>
+          <div className="mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1">
+                <button key="all" onClick={() => setFilter('all')} className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}>All</button>
+                <button key="owed-by-me" onClick={() => setFilter('owed-by-me')} className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'owed-by-me' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}>Owed By Me</button>
+                <button key="owed-to-me" onClick={() => setFilter('owed-to-me')} className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'owed-to-me' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}>Owed To Me</button>
+                <button key="overdue" onClick={() => setFilter('overdue')} className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'overdue' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'}`}>Overdue</button>
+              </div>
+
+              <div className="mt-2 sm:mt-0 sm:ml-4">
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="hidden sm:inline">Add Borrowing</span>
+                  <span className="sm:hidden">Add</span>
+                </button>
+              </div>
             </div>
           </div>
           </div>
@@ -788,11 +815,11 @@ const Borrowing = () => {
               )}
             </div>
           ) : (
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div ref={tableContainerRef} className="bg-white overflow-hidden shadow rounded-lg">
               <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
                 <div className="inline-block min-w-full align-middle">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 sticky top-0 z-10">
                       <tr>
                         <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16 sm:w-20">Type</th>
                         <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20 sm:min-w-32">Person</th>
@@ -804,7 +831,7 @@ const Borrowing = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {filteredItems.map((it, index) => {
+                      {paginatedItems.map((it, index) => {
                         const overdue = isOverdue(it)
                         const overdueSeverity = getOverdueSeverity(it)
                         const overdueDays = getOverdueDays(it)
@@ -876,12 +903,51 @@ const Borrowing = () => {
                             </div>
                           </td>
                         </tr>
-                        )
+                          )
                       })}
                     </tbody>
                   </table>
                 </div>
               </div>
+                {/* Pagination controls */}
+                {filteredItems.length > PAGE_SIZE && (
+                  <div className="px-4 sm:px-0 sm:pr-4 py-3 bg-white border-t border-gray-100 flex items-center justify-between">
+                    <div className="text-sm text-gray-600 sm:pl-4">Showing {(currentPage - 1) * PAGE_SIZE + 1} - {Math.min(currentPage * PAGE_SIZE, filteredItems.length)} of {filteredItems.length}</div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 rounded-md border bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50"
+                        aria-label="Previous page"
+                      >
+                        ‹
+                      </button>
+
+                      <div className="sm:hidden text-sm text-gray-700 px-2">Page {currentPage} of {totalPages}</div>
+
+                      <div className="hidden sm:flex items-center gap-1">
+                        {Array.from({ length: totalPages }).map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            aria-current={currentPage === i + 1 ? 'page' : undefined}
+                            className={`px-2 py-1 rounded-md text-sm ${currentPage === i + 1 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border'}`}>
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 rounded-md border bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50"
+                        aria-label="Next page"
+                      >
+                        ›
+                      </button>
+                    </div>
+                  </div>
+                )}
             </div>
           )}
 

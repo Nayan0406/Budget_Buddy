@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, getProfile, updateProfile, upload } = require('../controller/authController');
+const { register, login, getProfile, updateProfile, upload, forgotPassword } = require('../controller/authController');
 
 // Middleware to verify token
 const verifyToken = (req, res, next) => {
@@ -25,6 +25,9 @@ router.post('/register', register);
 
 // Login route
 router.post('/login', login);
+
+// Password reset routes
+router.post('/forgot-password', forgotPassword);
 
 // Profile routes
 router.get('/profile', verifyToken, getProfile);

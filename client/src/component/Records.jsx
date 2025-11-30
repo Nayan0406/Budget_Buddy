@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Sidebar from '../layout/Sidebar.jsx'
 import jsPDF from 'jspdf'
 
@@ -6,10 +6,31 @@ const Records = () => {
   const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all') // all, this-month, last-month, etc.
+  const [currentPage, setCurrentPage] = useState(1)
+  const tableContainerRef = useRef(null)
+
+  // Pagination
+  const PAGE_SIZE = 6
 
   useEffect(() => {
     fetchExpenses()
   }, [filter])
+
+  // Reset to first page when filter or expenses change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filter, expenses])
+
+  // Smooth scroll table into view on page change
+  useEffect(() => {
+    if (tableContainerRef.current) {
+      try {
+        tableContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } catch (e) {
+        tableContainerRef.current.scrollTop = 0
+      }
+    }
+  }, [currentPage])
 
   const fetchExpenses = async () => {
     try {
@@ -324,9 +345,9 @@ const Records = () => {
               <p className="text-sm sm:text-base text-gray-600">You haven't recorded any expenses yet.</p>
             </div>
           ) : (
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-                <table className="min-w-max w-full divide-y divide-gray-200">
+            <div ref={tableContainerRef} className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                  <table className="min-w-max w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -349,8 +370,12 @@ const Records = () => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredExpenses.map((expense) => (
+                    <tbody className="bg-white divide-y divide-gray-200">
+                    {/** Paginated rows */}
+                    {(() => {
+                      const totalPages = Math.max(1, Math.ceil(filteredExpenses.length / PAGE_SIZE))
+                      const paginatedExpenses = filteredExpenses.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                      return paginatedExpenses.map((expense) => (
                       <tr key={expense._id} className="hover:bg-gray-50">
                         <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                           {formatDate(expense.date)}
@@ -389,10 +414,50 @@ const Records = () => {
                           )}
                         </td>
                       </tr>
-                    ))}
+                      ))
+                    })()}
                   </tbody>
                 </table>
               </div>
+              {/* Pagination controls */}
+              {filteredExpenses.length > PAGE_SIZE && (
+                <div className="px-4 sm:px-0 sm:pr-4 py-3 bg-white border-t border-gray-100 flex items-center justify-between">
+                  <div className="text-sm text-gray-600 sm:pl-4">Showing {(currentPage - 1) * PAGE_SIZE + 1} - {Math.min(currentPage * PAGE_SIZE, filteredExpenses.length)} of {filteredExpenses.length}</div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-3 py-1 rounded-md border bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50"
+                      aria-label="Previous page"
+                    >
+                      ‹
+                    </button>
+
+                    <div className="sm:hidden text-sm text-gray-700 px-2">Page {currentPage} of {Math.max(1, Math.ceil(filteredExpenses.length / PAGE_SIZE))}</div>
+
+                    <div className="hidden sm:flex items-center gap-1">
+                      {Array.from({ length: Math.max(1, Math.ceil(filteredExpenses.length / PAGE_SIZE)) }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCurrentPage(i + 1)}
+                          aria-current={currentPage === i + 1 ? 'page' : undefined}
+                          className={`px-2 py-1 rounded-md text-sm ${currentPage === i + 1 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border'}`}>
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(Math.max(1, Math.ceil(filteredExpenses.length / PAGE_SIZE)), p + 1))}
+                      disabled={currentPage === Math.max(1, Math.ceil(filteredExpenses.length / PAGE_SIZE))}
+                      className="px-3 py-1 rounded-md border bg-white text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50"
+                      aria-label="Next page"
+                    >
+                      ›
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

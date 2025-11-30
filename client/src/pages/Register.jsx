@@ -51,8 +51,8 @@ const Register = () => {
         localStorage.setItem('user', JSON.stringify(data.user))
         setModal({
           isOpen: true,
-          title: 'Registration Successful!',
-          message: 'Welcome to Budget Buddy! Your account has been created successfully.',
+          title: 'Account Created Successfully! 🎊',
+          message: 'Welcome to Budget Buddy! Your account has been created and you\'re all set to start tracking your expenses.',
           type: 'success'
         })
         // Redirect to dashboard after showing modal

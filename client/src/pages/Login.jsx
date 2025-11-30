@@ -16,10 +16,64 @@ const Login = () => {
     type: 'info'
   })
 
+  // Forgot password states
+  const [showForgotForm, setShowForgotForm] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [forgotPassword, setForgotPassword] = useState('')
+  const [forgotLoading, setForgotLoading] = useState(false)
+
   const [showPassword, setShowPassword] = useState(false)
 
   const closeModal = () => {
     setModal({ ...modal, isOpen: false })
+  }
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault()
+    if (forgotPassword.length < 6) {
+      setModal({
+        isOpen: true,
+        title: 'Weak Password',
+        message: 'Password must be at least 6 characters.',
+        type: 'error'
+      })
+      return
+    }
+
+    try {
+      setForgotLoading(true)
+      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail, newPassword: forgotPassword })
+      })
+
+      if (res.ok) {
+        setModal({
+          isOpen: true,
+          title: 'Password Changed Successfully! 🔐',
+          message: 'Your password has been updated. You can now log in with your new password.',
+          type: 'success'
+        })
+        setShowForgotForm(false)
+        setForgotEmail('')
+        setForgotPassword('')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setModal({
+          isOpen: true,
+          title: 'Failed',
+          message: data.message || 'Could not change password.',
+          type: 'error'
+        })
+      }
+    } catch (err) {
+      console.error('Forgot password error', err)
+      setModal({ isOpen: true, title: 'Network Error', message: 'Unable to reach server.', type: 'error' })
+    } finally {
+      setForgotLoading(false)
+    }
   }
 
   const handleChange = (e) => {
@@ -49,8 +103,8 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(data.user))
         setModal({
           isOpen: true,
-          title: 'Login Successful!',
-          message: 'Welcome back to Budget Buddy!',
+          title: 'Welcome back! 🎉',
+          message: 'Great to see you again! You\'re now logged in and ready to manage your budget.',
           type: 'success'
         })
         // Redirect to dashboard after showing modal
@@ -155,6 +209,9 @@ const Login = () => {
               Sign In
             </button>
           </div>
+          <div className="mt-2 text-right">
+            <button type="button" className="text-sm text-indigo-600 hover:text-indigo-500" onClick={() => setShowForgotForm(true)}>Forgot password?</button>
+          </div>
         </form>
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
@@ -172,6 +229,48 @@ const Login = () => {
         message={modal.message}
         type={modal.type}
       />
+
+      {/* Forgot Password Modal */}
+      {showForgotForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black opacity-40 z-40" onClick={() => setShowForgotForm(false)} />
+          <div className="bg-white rounded-lg shadow-lg z-50 w-full max-w-md mx-auto p-6">
+            <button onClick={() => setShowForgotForm(false)} aria-label="Close" className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Forgot Password</h3>
+            <p className="text-sm text-gray-600 mb-4">Enter your registered email and new password to change your password.</p>
+            <form onSubmit={handleForgotSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  required
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <input
+                  type="password"
+                  required
+                  value={forgotPassword}
+                  onChange={(e) => setForgotPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={() => setShowForgotForm(false)} className="px-4 py-2 border rounded-lg">Cancel</button>
+                <button type="submit" disabled={forgotLoading} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50">{forgotLoading ? 'Changing...' : 'Change Password'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
