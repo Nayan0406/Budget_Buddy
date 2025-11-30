@@ -15,23 +15,51 @@ const Sidebar = () => {
   }
 
   const firstLinkRef = useRef(null)
+  const scrollYRef = useRef(0)
 
   // Close on Escape, trap focus to first link when opening, and prevent body scroll
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') setIsOpen(false)
     }
+
     if (isOpen) {
-      document.addEventListener('keydown', onKey)
+      // store current scroll position
+      scrollYRef.current = window.scrollY || window.pageYOffset || 0
+
+      // lock body scroll by fixing position and preventing jumps
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollYRef.current}px`
+      document.body.style.left = '0'
+      document.body.style.right = '0'
+      document.body.style.width = '100%'
       document.body.style.overflow = 'hidden'
+
+      document.addEventListener('keydown', onKey)
+
       // focus the first link in the sidebar for accessibility
       setTimeout(() => firstLinkRef.current?.focus(), 50)
     } else {
+      // restore body scroll
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
       document.body.style.overflow = ''
+
+      // restore previous scroll position
+      window.scrollTo(0, scrollYRef.current)
+
       document.removeEventListener('keydown', onKey)
     }
 
     return () => {
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
       document.body.style.overflow = ''
       document.removeEventListener('keydown', onKey)
     }

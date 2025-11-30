@@ -570,10 +570,11 @@ const Dashboard = () => {
 
           {/* Legend */}
           <div className="w-full">
-            <div className="flex flex-wrap justify-center gap-3">
-              <h4 className="w-full text-center text-sm font-semibold text-gray-900 mb-2">Expense Categories</h4>
+            <h4 className="text-center text-sm font-semibold text-gray-900 mb-2">Expense Categories</h4>
+
+            <div className="flex gap-3 overflow-x-auto px-2 sm:flex-wrap sm:justify-center">
               {slices.map((slice, index) => (
-                <div key={index} className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
+                <div key={index} className="shrink-0 flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
                   <div
                     className="w-3 h-3 rounded-full shrink-0"
                     style={{ backgroundColor: slice.color }}
