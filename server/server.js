@@ -54,8 +54,22 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
+  // Log useful context for debugging
+  console.error('Unhandled error on', req.method, req.originalUrl);
+  console.error('Error name:', err.name);
+  console.error('Error message:', err.message);
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+
+  const payload = {
+    message: err.message || 'Something went wrong!'
+  };
+
+  // Include stack in non-production for debugging
+  if (process.env.NODE_ENV !== 'production') {
+    payload.stack = err.stack;
+  }
+
+  res.status(err.statusCode || 500).json(payload);
 });
 
 const PORT = process.env.PORT || 5000;

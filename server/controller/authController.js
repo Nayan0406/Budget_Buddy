@@ -189,8 +189,18 @@ const updateProfile = async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Update profile error for user:', req?.user?.userId);
+    console.error('Request body preview:', {
+      username: req?.body?.username,
+      email: req?.body?.email,
+      profileImage: req?.body?.profileImage
+    });
+    console.error('File present:', !!req?.file);
+    console.error(error && error.stack ? error.stack : error);
+
+    const payload = { message: error?.message || 'Server error during profile update' };
+    if (process.env.NODE_ENV !== 'production') payload.stack = error?.stack;
+    res.status(error?.statusCode || 500).json(payload);
   }
 };
 
