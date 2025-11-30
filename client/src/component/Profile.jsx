@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Sidebar from '../layout/Sidebar.jsx'
+import Modal from './Modal.jsx'
 
 const Profile = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || '{}'))
@@ -12,6 +13,7 @@ const Profile = () => {
   })
   const [loading, setLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState(null)
+  const [modal, setModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
   // Fetch updated user data on mount
   useEffect(() => {
@@ -96,9 +98,16 @@ const Profile = () => {
         setUser(updatedUser)
         localStorage.setItem('user', JSON.stringify(updatedUser))
         setIsEditing(false)
-        alert('Profile updated successfully!')
+        setModal({ isOpen: true, title: 'Success', message: 'Profile updated successfully!', type: 'success' })
       } else {
-        alert('Failed to update profile. Please try again.')
+        let errorMsg = 'Failed to update profile. Please try again.'
+        try {
+          const err = await response.json()
+          if (err && err.message) errorMsg = err.message
+        } catch (e) {
+          // ignore parse error
+        }
+        setModal({ isOpen: true, title: 'Update Failed', message: errorMsg, type: 'error' })
       }
     } catch (error) {
       console.error('Error updating profile:', error)
@@ -135,9 +144,16 @@ const Profile = () => {
         setUser(updatedUser)
         localStorage.setItem('user', JSON.stringify(updatedUser))
         setImagePreview(null)
-        alert('Profile image deleted successfully!')
+        setModal({ isOpen: true, title: 'Success', message: 'Profile image deleted successfully!', type: 'success' })
       } else {
-        alert('Failed to delete profile image. Please try again.')
+        let errorMsg = 'Failed to delete profile image. Please try again.'
+        try {
+          const err = await response.json()
+          if (err && err.message) errorMsg = err.message
+        } catch (e) {
+          // ignore
+        }
+        setModal({ isOpen: true, title: 'Delete Failed', message: errorMsg, type: 'error' })
       }
     } catch (error) {
       console.error('Error deleting profile image:', error)
@@ -158,8 +174,13 @@ const Profile = () => {
     setIsEditing(false)
   }
 
+  const closeModal = () => {
+    setModal({ isOpen: false, title: '', message: '', type: 'info' })
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Modal isOpen={modal.isOpen} onClose={closeModal} title={modal.title} message={modal.message} type={modal.type} />
       <Sidebar />
       <div className="lg:ml-64">
         <div className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
