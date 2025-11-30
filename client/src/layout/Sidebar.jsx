@@ -16,6 +16,15 @@ const Sidebar = () => {
 
   const firstLinkRef = useRef(null)
   const scrollYRef = useRef(0)
+  const sidebarRef = useRef(null)
+  const preventTouchRef = useRef((ev) => {
+    if (!sidebarRef.current) return
+    if (!sidebarRef.current.contains(ev.target)) ev.preventDefault()
+  })
+  const preventWheelRef = useRef((ev) => {
+    if (!sidebarRef.current) return
+    if (!sidebarRef.current.contains(ev.target)) ev.preventDefault()
+  })
 
   // Close on Escape, trap focus to first link when opening, and prevent body scroll
   useEffect(() => {
@@ -37,6 +46,10 @@ const Sidebar = () => {
 
       document.addEventListener('keydown', onKey)
 
+      // Prevent touchmove (iOS) and wheel events outside the sidebar when open
+      document.addEventListener('touchmove', preventTouchRef.current, { passive: false })
+      document.addEventListener('wheel', preventWheelRef.current, { passive: false })
+
       // focus the first link in the sidebar for accessibility
       setTimeout(() => firstLinkRef.current?.focus(), 50)
     } else {
@@ -52,6 +65,8 @@ const Sidebar = () => {
       window.scrollTo(0, scrollYRef.current)
 
       document.removeEventListener('keydown', onKey)
+      document.removeEventListener('touchmove', preventTouchRef.current)
+      document.removeEventListener('wheel', preventWheelRef.current)
     }
 
     return () => {
@@ -62,6 +77,8 @@ const Sidebar = () => {
       document.body.style.width = ''
       document.body.style.overflow = ''
       document.removeEventListener('keydown', onKey)
+      document.removeEventListener('touchmove', preventTouchRef.current)
+      document.removeEventListener('wheel', preventWheelRef.current)
     }
   }, [isOpen])
 
