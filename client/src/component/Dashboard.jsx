@@ -519,8 +519,8 @@ const Dashboard = () => {
 
     return (
       <div ref={containerRef} className="w-full">
-        <div className="flex flex-row items-start gap-4">
-          <div className="flex-1">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-full max-w-lg mx-auto">
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
               <defs>
                 {/* Drop shadow filter */}
@@ -569,26 +569,18 @@ const Dashboard = () => {
           </div>
 
           {/* Legend */}
-          <div className="w-40 lg:flex-initial">
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">Expense Categories</h4>
+          <div className="w-full">
+            <div className="flex flex-wrap justify-center gap-3">
+              <h4 className="w-full text-center text-sm font-semibold text-gray-900 mb-2">Expense Categories</h4>
               {slices.map((slice, index) => (
-                <div key={index} className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full shrink-0"
-                      style={{ backgroundColor: slice.color }}
-                    ></div>
-                    <span className="text-xs text-gray-700 truncate">{slice.category}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs font-medium text-gray-900">
-                      ₹{formatINR(slice.amount)}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {Math.round(slice.percentage * 100)}%
-                    </div>
-                  </div>
+                <div key={index} className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
+                  <div
+                    className="w-3 h-3 rounded-full shrink-0"
+                    style={{ backgroundColor: slice.color }}
+                  ></div>
+                  <span className="text-xs text-gray-700 font-medium">{slice.category}</span>
+                  <span className="text-xs font-semibold text-gray-900">{formatINR(slice.amount)}</span>
+                  <span className="text-xs text-gray-500">({Math.round(slice.percentage * 100)}%)</span>
                 </div>
               ))}
             </div>
@@ -622,7 +614,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="lg:ml-64 pt-16 lg:pt-0">
+      <div className="lg:ml-64 lg:pt-0">
         <div className="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
           <div className="py-4 sm:py-6">
             <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -681,7 +673,7 @@ const Dashboard = () => {
                     <div className="bg-indigo-50 p-3 sm:p-4 lg:p-6 rounded-lg border border-indigo-100">
                       <h3 className="text-sm sm:text-base lg:text-lg font-medium text-indigo-900 mb-2">Total Income</h3>
                       <p className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-indigo-600">
-                        {loading ? '...' : `₹${formatINR(yearIncome)}`}
+                        {loading ? '...' : formatINR(yearIncome)}
                       </p>
                     </div>
                     <div className="bg-green-50 p-3 sm:p-4 lg:p-6 rounded-lg border border-green-100">
@@ -689,13 +681,13 @@ const Dashboard = () => {
                         This Month
                       </h3>
                         <p className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-green-600">
-                          {loading ? '...' : `₹${formatINR(monthIncome)}`}
+                          {loading ? '...' : formatINR(monthIncome)}
                         </p>
                       </div>
                     <div className="bg-blue-50 p-3 sm:p-4 lg:p-6 rounded-lg border border-blue-100">
                       <h3 className="text-sm sm:text-base lg:text-lg font-medium text-blue-900 mb-2">Budget Left</h3>
                       <p className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-blue-600">
-                        {loading ? '...' : `₹${formatINR(budgetLeft)}`}
+                        {loading ? '...' : formatINR(budgetLeft)}
                       </p>
                     </div>
                   </div>
@@ -742,7 +734,7 @@ const Dashboard = () => {
                                       {reminder.counterparty?.name || 'Unknown'}
                                     </div>
                                     <div className="text-xs text-gray-500">
-                                      {reminder.type === 'borrowed' ? 'You owe' : 'Owes you'} • ₹{formatINR(reminder.remaining ?? reminder.amount)}
+                                      {reminder.type === 'borrowed' ? 'You owe' : 'Owes you'} • {formatINR(reminder.remaining ?? reminder.amount)}
                                     </div>
                                   </div>
                                 </div>
@@ -760,7 +752,7 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-3 text-center">
                           <button
-                            onClick={() => navigate('/borrowing')}
+                            onClick={() => navigate('/borrowings')}
                             className="text-sm text-orange-600 hover:text-orange-700 font-medium hover:underline"
                           >
                             View all borrowings →

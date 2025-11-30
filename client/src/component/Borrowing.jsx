@@ -312,8 +312,8 @@ const Borrowing = () => {
         <div className="py-4 sm:py-6 px-3 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="bg-indigo-100 text-indigo-600 rounded-full p-2 sm:p-3 shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="bg-indigo-100 text-indigo-600 rounded-full p-1 sm:p-3 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8v8m0-8V4" />
                 </svg>
               </div>

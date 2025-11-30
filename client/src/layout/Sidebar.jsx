@@ -135,7 +135,7 @@ const Sidebar = () => {
                 Add Expenses
               </Link>
               <Link
-                to="/borrowing"
+                to="/borrowings"
                 className={`flex items-center px-3 py-2 text-white hover:bg-gray-700 rounded-md transition duration-200 ${location.pathname === '/borrowing' ? 'bg-gray-700' : ''}`}
                 onClick={() => { if (window.innerWidth < 1024) setIsOpen(false) }}
               >
