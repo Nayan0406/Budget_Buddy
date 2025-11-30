@@ -111,10 +111,12 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
+        ref={sidebarRef}
         className={
-          `fixed left-0 top-0 bottom-0 z-50 w-3/4 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto
+          `fixed left-0 top-0 bottom-0 z-50 w-3/4 sm:w-64 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto overflow-x-hidden overscroll-contain
         ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
         }
+        style={{ touchAction: 'pan-y' }}
         role={isOpen ? 'dialog' : 'navigation'}
         aria-modal={isOpen}
         aria-hidden={!isOpen && window.innerWidth < 1024}
@@ -140,13 +142,13 @@ const Sidebar = () => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
+          <nav className="flex-1 px-4 py-6 space-y-2 min-w-0">
             {/* <div className="text-white text-sm mb-4 px-3 py-2 bg-indigo-700 rounded-md">
               Welcome, {user.username || 'User'}!
             </div> */}
 
             {/* Navigation items can be added here later */}
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <Link
                 to="/dashboard"
                 ref={firstLinkRef}
