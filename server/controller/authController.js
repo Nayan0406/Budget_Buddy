@@ -13,6 +13,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+const cloudinaryConfigured = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+
 // Configure multer for profile image uploads with Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -172,6 +174,12 @@ const updateProfile = async (req, res) => {
 
     // Handle profile image upload
     if (req.file) {
+      if (!cloudinaryConfigured) {
+        // Provide a clear message instead of a generic 500 when deployment lacks Cloudinary env
+        const err = new Error('Cloudinary is not configured on this server. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET environment variables.');
+        err.statusCode = 500;
+        throw err;
+      }
       updateData.profileImage = req.file.path; // Cloudinary URL
     } else if (req.body.profileImage === 'null') {
       updateData.profileImage = null; // Delete image
