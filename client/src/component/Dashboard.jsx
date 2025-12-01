@@ -30,7 +30,9 @@ const Dashboard = () => {
     'December',
   ]
   const [selectedYear, setSelectedYear] = useState(currentYear)
-  const [selectedMonth, setSelectedMonth] = useState('All')
+  // Default selected month to the current calendar month (not 'All') so charts show current month by default
+  const currentMonthName = months[new Date().getMonth() + 1] || 'All'
+  const [selectedMonth, setSelectedMonth] = useState(currentMonthName)
   const [udharAmount, setUdharAmount] = useState(0)
 
   // Income data
