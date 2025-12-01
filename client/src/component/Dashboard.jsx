@@ -107,6 +107,15 @@ const Dashboard = () => {
 
   const expenseCategories = generateExpenseCategories(expenses, selectedYear, selectedMonth)
 
+  // Keep a stateful version of expense categories so charts update predictably
+  const [expenseCategoriesState, setExpenseCategoriesState] = useState(() =>
+    generateExpenseCategories(expenses, selectedYear, selectedMonth)
+  )
+
+  useEffect(() => {
+    setExpenseCategoriesState(generateExpenseCategories(expenses, selectedYear, selectedMonth))
+  }, [expenses, selectedYear, selectedMonth])
+
   // Get upcoming borrowing reminders
   const getUpcomingReminders = (borrowingsData) => {
     const today = new Date()
@@ -679,7 +688,7 @@ const Dashboard = () => {
                     </div>
                     <div className="bg-green-50 p-3 sm:p-4 lg:p-6 rounded-lg border border-green-100">
                       <h3 className="text-sm sm:text-base lg:text-lg font-medium text-green-900 mb-2">
-                        This Month
+                        {selectedMonth === 'All' ? 'This Month' : `${selectedMonth} ${selectedYear}`}
                       </h3>
                         <p className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-green-600">
                           {loading ? '...' : formatINR(monthIncome)}
@@ -702,11 +711,11 @@ const Dashboard = () => {
                   </div>
 
                   {/* Expense Categories Pie Chart */}
-                  <div className="mt-8">
+                    <div className="mt-8">
                     <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3">
                       Expense Categories — {selectedMonth === 'All' ? selectedYear : `${selectedMonth} ${selectedYear}`}
                     </h2>
-                    <ExpensePieChart data={expenseCategories} />
+                    <ExpensePieChart data={expenseCategoriesState} />
                   </div>
 
                   {/* Upcoming Borrowing Reminders */}
