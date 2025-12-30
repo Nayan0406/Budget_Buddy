@@ -34,7 +34,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const response = await fetch(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: {

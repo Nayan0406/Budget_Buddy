@@ -33,7 +33,7 @@ const AddExpenses = () => {
         formData.append(`attachments`, file)
       })
 
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/expenses`, {
         method: 'POST',
         headers: {

@@ -42,7 +42,7 @@ const Login = () => {
 
     try {
       setForgotLoading(true)
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,7 +86,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: {

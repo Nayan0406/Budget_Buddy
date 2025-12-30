@@ -23,7 +23,7 @@ const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const response = await fetch(`${API_BASE}/auth/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -73,7 +73,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
 
       const formDataToSend = new FormData()
       formDataToSend.append('username', formData.username)
@@ -123,7 +123,7 @@ const Profile = () => {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
 
       const formDataToSend = new FormData()
       formDataToSend.append('username', formData.username)

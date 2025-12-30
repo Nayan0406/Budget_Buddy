@@ -42,7 +42,7 @@ const Borrowing = () => {
       setLoading(true)
       setError('')
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/borrowings`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       })
@@ -165,7 +165,7 @@ const Borrowing = () => {
     try {
       setSaving(true)
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const payload = {
         type: 'borrowed',
         counterparty: { name: quick.name, contact: quick.contact },
@@ -201,7 +201,7 @@ const Borrowing = () => {
     try {
       setSaving(true)
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const payload = {
         type: form.type,
         counterparty: { name: form.name, contact: form.contact },
@@ -244,7 +244,7 @@ const Borrowing = () => {
   const updateStatus = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/borrowings/${id}`, {
         method: 'PATCH',
         headers: {
@@ -272,7 +272,7 @@ const Borrowing = () => {
   const addPayment = async (id, paymentAmount) => {
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/borrowings/${id}`, {
         method: 'PATCH',
         headers: {
@@ -302,7 +302,7 @@ const Borrowing = () => {
   const updateDueDate = async (id, newDueDate) => {
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
       const res = await fetch(`${API_BASE}/borrowings/${id}`, {
         method: 'PATCH',
         headers: {

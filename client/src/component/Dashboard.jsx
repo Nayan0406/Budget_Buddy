@@ -179,7 +179,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token')
-      const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+      const API_BASE = import.meta.env.VITE_API_BASE || 'https://budget-buddy-backend-five.vercel.app/api'
 
       // Fetch incomes
       const incomeResponse = await fetch(`${API_BASE}/income`, {
